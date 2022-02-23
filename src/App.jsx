@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import CalculadoraArticle from './components/CalculadoraArticle'
+import styled from 'styled-components'
 
 function App() {
   const [calcList, setCalcList] = useState([])
@@ -17,18 +19,22 @@ function App() {
         <h1>Calculadoras para Acústica</h1>
         <address>- Francisco Martins Nunes</address>
       </header>
-      <section>
+      <Container>
         {calcList.map((calculadora) => (
-          <article key={'calculadora'+calculadora.id}>
-            <h2>{calculadora.attributes.nome} <button>&#9432;</button></h2>
-            <img src={localUrl + calculadora.attributes.imagem.data.attributes.url} title={calculadora.attributes.imagem.data.attributes.alternativeText} alt={calculadora.attributes.imagem.data.attributes.alternativeText} />
-            <p>{calculadora.attributes.descricao}</p>
-            <a href="#">Acessar a calculadora</a>
-          </article>
+          <CalculadoraArticle atributos={calculadora.attributes} url={localUrl} key={'calculadora'+calculadora.id} />
         ))}
-      </section>
+      </Container>
     </div>
   )
 }
 
 export default App
+
+const Container = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: auto;
+`
