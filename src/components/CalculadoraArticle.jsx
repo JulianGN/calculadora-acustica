@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 
-function CalculadoraArticle({atributos, url}) {
+function CalculadoraArticle({atributos, url, current}) {
     return (
-        <article>
+        <ContainerItem className={current ? 'top-menu-item' : null}>
             <HeaderTitle>{atributos.nome} <InfoBtn>&#9432;</InfoBtn></HeaderTitle>
             <img src={url + atributos.imagem.data.attributes.url} title={atributos.imagem.data.attributes.alternativeText} alt={atributos.imagem.data.attributes.alternativeText} />
             <p>{atributos.descricao}</p>
             <a href="#">Acessar a calculadora</a>
-        </article>
+        </ContainerItem>
     )
 }
 
@@ -33,4 +33,27 @@ const InfoBtn = styled.button`
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
+`
+
+const ContainerItem = styled.div`
+    &.top-menu-item {
+        text-align: center;
+        flex-direction: column-reverse;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &.top-menu-item > img {
+        width: 30%;
+    }
+
+    &.top-menu-item > ${HeaderTitle} {
+        font-size: 1.5rem;
+        gap: 0;
+    }
+
+    &.top-menu-item > a, &.top-menu-item ${InfoBtn}, &.top-menu-item p {
+        display: none;
+    }
 `
