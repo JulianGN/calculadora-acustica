@@ -39,7 +39,7 @@ function App() {
       </Container>
       <FrameContainer className={calcSelected ? 'active' : null}>
         {
-          !iFrameLoaded ? <div>Carregando</div> : null
+          !iFrameLoaded && calcSelected ? <div>Carregando</div> : null
         }
         {
           !calcSelected ? null : 
