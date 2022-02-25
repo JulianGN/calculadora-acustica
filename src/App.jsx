@@ -6,6 +6,7 @@ import styled from 'styled-components'
 function App() {
   const [calcList, setCalcList] = useState([])
   const [calcSelected, setCalc] = useState(null)
+  const [iFrameLoaded, setStatus] = useState(false)
   const localUrl = 'http://localhost:1337'
 
   useEffect(() => {
@@ -15,6 +16,7 @@ function App() {
   }, []);
 
   function chooseCalc(calc) {
+    setStatus(false);
     setCalc(calc);
   }
 
@@ -37,8 +39,11 @@ function App() {
       </Container>
       <FrameContainer className={calcSelected ? 'active' : null}>
         {
+          !iFrameLoaded ? <div>Carregando</div> : null
+        }
+        {
           !calcSelected ? null : 
-          <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src={calcSelected.url}></iframe>
+          <iframe width="100%" style={!iFrameLoaded ? {opacity: 0} : null} onLoad={() => setStatus(true)} height="100%" frameBorder="0" scrolling="no" src={calcSelected.url}></iframe>
         }
       </FrameContainer>
     </div>
