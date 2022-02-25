@@ -18,13 +18,17 @@ function App() {
     setCalc(calc);
   }
 
+  function backHome(){
+    setCalc(null);
+  }
+
   return (
     <div className="App">
       <HeaderHome className={calcSelected ? 'hide' : null}>
-        <h1>Calculadoras para Acústica</h1>
-        <address>- Francisco Martins Nunes</address>
+        <h1>Calculadoras Acústicas <InfoBtn><i className="fa-solid fa-circle-question"></i></InfoBtn></h1>
       </HeaderHome>
       <Container className={calcSelected ? 'top-menu' : null}>
+        <BackHome className={calcSelected == null ? 'hide' : null} onClick={() => backHome()}><i class="fa-solid fa-chevron-left"></i></BackHome>
         {calcList.map((calculadora) => (
           <CalcsOptions onClick={() => chooseCalc(calculadora.attributes)} key={'calculadora'+calculadora.id}>
             <CalculadoraArticle atributos={calculadora.attributes} url={localUrl} current={calcSelected} />
@@ -47,6 +51,28 @@ const HeaderHome = styled.header`
   &.hide{
     display: none;
   }
+
+  & > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+`
+
+const BackHome = styled.button`
+    position: sticky;
+    left: 0;
+    background: linear-gradient(to right, #f1f1f1,rgba(241,241,241,0));
+    border: none;
+    outline: none;
+    height: 100%;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 0 1rem;
+
+    &.hide{
+      display: none;
+    }
 `
 
 const Container = styled.section`
@@ -56,6 +82,7 @@ const Container = styled.section`
   margin: auto;
 
   &.top-menu{
+    position: relative;
     flex-wrap: nowrap;
     overflow-y: hidden;
     overflow-x: auto;
@@ -78,4 +105,15 @@ const FrameContainer = styled.section`
     height: 80vh;
     transition: 1s;
   }
+`
+
+const InfoBtn = styled.button`
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: var(--blue);
+    border: unset;
+    outline: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 `

@@ -1,12 +1,28 @@
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 function CalculadoraArticle({atributos, url, current}) {
+    const [classes, setClasses] = useState('');
+
+    useEffect(() => {
+        if(!current) {
+            setClasses('');
+            return
+        }
+
+        if(current?.createdAt == atributos.createdAt)
+            setClasses('top-menu-item active')
+        else
+            setClasses('top-menu-item')  
+
+    }, [current])
+
     return (
-        <ContainerItem className={current ? 'top-menu-item' : null}>
-            <HeaderTitle>{atributos.nome} <InfoBtn>&#9432;</InfoBtn></HeaderTitle>
+        <ContainerItem className={classes}>
             <img src={url + atributos.imagem.data.attributes.url} title={atributos.imagem.data.attributes.alternativeText} alt={atributos.imagem.data.attributes.alternativeText} />
-            <p>{atributos.descricao}</p>
-            <a href="#">Acessar a calculadora</a>
+            <HeaderTitle>{atributos.nome}</HeaderTitle>
+            {/* <p>{atributos.descricao}</p> */}
+            {/* <a href="#">Acessar a calculadora</a> */}
         </ContainerItem>
     )
 }
@@ -20,28 +36,26 @@ const HeaderTitle = styled.h2`
     font-size: 2rem;
 `
 
-const InfoBtn = styled.button`
-    cursor: pointer;
-    font-size: .75rem;
-    background-color: black;
-    color: white;
-    border: unset;
-    outline: unset;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-`
-
 const ContainerItem = styled.div`
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: .5rem;
+    box-shadow: 0px 4px 10px 0px rgb(0 0 0 / 15%);
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    height: 35vh;
+
     &.top-menu-item {
-        text-align: center;
-        flex-direction: column-reverse;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        height: 110%;
+    }
+
+    & > img {
+        width: 120px;
     }
 
     &.top-menu-item > img {
@@ -49,11 +63,16 @@ const ContainerItem = styled.div`
     }
 
     &.top-menu-item > ${HeaderTitle} {
-        font-size: 1.5rem;
+        font-size: 1rem;
         gap: 0;
     }
 
-    &.top-menu-item > a, &.top-menu-item ${InfoBtn}, &.top-menu-item p {
+    &.top-menu-item > a, &.top-menu-item p {
         display: none;
+    }
+
+    &.active {
+        background-color: var(--blue);
+        color: var(--white);
     }
 `
