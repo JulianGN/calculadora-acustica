@@ -7,7 +7,7 @@ function App() {
   const [calcList, setCalcList] = useState([])
   const [calcSelected, setCalc] = useState(null)
   const [iFrameLoaded, setStatus] = useState(false)
-  const localUrl = 'http://localhost:1337'
+  const localUrl = 'https://calculadoras-acusticas.herokuapp.com'
 
   useEffect(() => {
     fetch(localUrl + '/api/calculadoras?populate=*')
