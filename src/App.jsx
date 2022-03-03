@@ -39,7 +39,9 @@ function App() {
       </Container>
       <FrameContainer className={calcSelected ? 'active' : null}>
         {
-          !iFrameLoaded && calcSelected ? <div>Carregando</div> : null
+          !iFrameLoaded && calcSelected ?
+            <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            : null
         }
         {
           !calcSelected ? null : 
@@ -121,4 +123,10 @@ const InfoBtn = styled.button`
     display: inline-flex;
     align-items: center;
     justify-content: center;
+`
+
+const LoadingArea = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: var(--lighter-blue)
 `
