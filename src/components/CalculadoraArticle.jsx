@@ -19,7 +19,11 @@ function CalculadoraArticle({atributos, url, current}) {
 
     return (
         <ContainerItem className={classes}>
-            <img src={url + atributos.imagem.data.attributes.url} title={atributos.imagem.data.attributes.alternativeText} alt={atributos.imagem.data.attributes.alternativeText} />
+            <img
+                src={atributos.imagem}
+                title={atributos.nome}
+                alt={atributos.nome} 
+            />
             <HeaderTitle>{atributos.nome}</HeaderTitle>
             {/* <p>{atributos.descricao}</p> */}
             {/* <a href="#">Acessar a calculadora</a> */}

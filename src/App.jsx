@@ -10,7 +10,7 @@ function App() {
   const localUrl = 'https://calculadoras-acusticas.herokuapp.com'
 
   useEffect(() => {
-    fetch(localUrl + '/api/calculadoras?populate=*')
+    fetch(localUrl + '/api/calculadoras')
         .then(response => response.json())
         .then(resp => setCalcList(resp.data));
   }, []);
