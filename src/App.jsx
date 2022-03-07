@@ -31,11 +31,11 @@ function App() {
       </HeaderHome>
       <Container className={calcSelected ? 'top-menu' : null}>
         <BackHome className={calcSelected == null ? 'hide' : null} onClick={() => backHome()}><i class="fa-solid fa-chevron-left"></i></BackHome>
-        {calcList.map((calculadora) => (
-          <CalcsOptions onClick={() => chooseCalc(calculadora.attributes)} key={'calculadora'+calculadora.id}>
+        {calcList.length > 0 ? calcList.map((calculadora) => (
+           <CalcsOptions onClick={() => chooseCalc(calculadora.attributes)} key={'calculadora'+calculadora.id}>
             <CalculadoraArticle atributos={calculadora.attributes} url={localUrl} current={calcSelected} />
           </CalcsOptions>
-        ))}
+        )) : <AbsoluteCenter className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></AbsoluteCenter>}
       </Container>
       <FrameContainer className={calcSelected ? 'active' : null}>
         {
@@ -112,6 +112,13 @@ const FrameContainer = styled.section`
     height: 80vh;
     transition: 1s;
   }
+`
+
+const AbsoluteCenter = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
 `
 
 const InfoBtn = styled.button`
