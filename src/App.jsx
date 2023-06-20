@@ -2,6 +2,19 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import CalculadoraArticle from "./components/CalculadoraArticle";
 import styled from "styled-components";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 function App() {
   const [calcList, setCalcList] = useState([]);
@@ -10,7 +23,18 @@ function App() {
   const localUrl = "https://api-accalc.glitch.me/";
 
   useEffect(() => {
-    fetch(
+    mustApprove()
+      .then(async () => {
+        await loadList();
+      })
+      .catch(() => {
+        // User rejected, show a fallback UI or redirect to another page
+        console.log("User rejected");
+      });
+  }, []);
+
+  async function loadList() {
+    await fetch(
       localUrl +
         "api?id=1v51SITbRLPjj7pt0UM0v5v0f0YUPFHQXUIR9duSwwn0&sheet=Calculadoras"
     )
@@ -18,7 +42,7 @@ function App() {
       .then((resp) => {
         setCalcList(resp.rows);
       });
-  }, []);
+  }
 
   function chooseCalc(calc) {
     setStatus(false);
@@ -29,12 +53,48 @@ function App() {
     setCalc(null);
   }
 
+  function alertInfo() {
+    Swal.fire({
+      title: "Sobre a utilização",
+      text: "Essa planilha foi criada por Francisco Martins Nunes na Universidade Federal de Minas Gerais. 2021-2023. Material destinado exclusivamente para uso educacional.",
+    });
+  }
+
+  async function mustApprove() {
+    const { value: accept } = await Swal.fire({
+      title: "Termos de uso",
+      input: "checkbox",
+      text: "Essa planilha foi criada por Francisco Martins Nunes na Universidade Federal de Minas Gerais. 2021-2023. Material destinado exclusivamente para uso educacional.",
+      inputValue: 0,
+      inputPlaceholder: "Concordo em utilizar apenas para fins acadêmicos.",
+      confirmButtonText: 'Continuar <i class="fa fa-arrow-right"></i>',
+      showCancelButton: false,
+      showCloseButton: false,
+      showDenyButton: false,
+      allowOutsideClick: false,
+      inputValidator: (result) => {
+        return (
+          !result && "Você precisa aceitar os termos de uso para continuar"
+        );
+      },
+    });
+
+    if (accept) {
+      Toast.fire({
+        icon: "success",
+        title: "Agradecemos a compreensão!",
+      });
+    } else {
+      throw new Error("ops");
+    }
+  }
+
   return (
     <div className="App">
       <HeaderHome className={calcSelected ? "hide" : null}>
         <h1>
-          Calculadoras Acústicas{" "}
-          <InfoBtn>
+          Calculadoras Acústicas
+          <InfoBtn onClick={() => alertInfo()}>
             <i className="fa-solid fa-circle-question"></i>
           </InfoBtn>
         </h1>
@@ -186,6 +246,7 @@ const InfoBtn = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-left: 0.5rem;
 `;
 
 const LoadingArea = styled.div`
