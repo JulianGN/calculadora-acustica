@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import CalculadoraArticle from "./components/CalculadoraArticle";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Swal from "sweetalert2";
 
 const Toast = Swal.mixin({
@@ -18,26 +18,38 @@ const Toast = Swal.mixin({
 
 function App() {
   const [calcList, setCalcList] = useState([]);
+  const [infoData, setInfoData] = useState(null);
   const [calcSelected, setCalc] = useState(null);
   const [iFrameLoaded, setStatus] = useState(false);
-  const localUrl = "https://api-accalc.glitch.me/";
+  const localUrl =
+    "https://api-accalc.glitch.me/api?id=1v51SITbRLPjj7pt0UM0v5v0f0YUPFHQXUIR9duSwwn0&sheet=";
 
   useEffect(() => {
-    mustApprove()
-      .then(async () => {
-        await loadList();
-      })
-      .catch(() => {
-        // User rejected, show a fallback UI or redirect to another page
-        console.log("User rejected");
-      });
+    loadInfoData();
   }, []);
 
+  useEffect(() => {
+    if (infoData) {
+      mustApprove()
+        .then(async () => {
+          await loadList();
+        })
+        .catch(() => {
+          console.log("Usuário rejeitou.");
+        });
+    }
+  }, [infoData]);
+
+  async function loadInfoData() {
+    await fetch(localUrl + "DadosIniciais")
+      .then((response) => response.json())
+      .then((resp) => {
+        setInfoData(resp.rows[0]);
+      });
+  }
+
   async function loadList() {
-    await fetch(
-      localUrl +
-        "api?id=1v51SITbRLPjj7pt0UM0v5v0f0YUPFHQXUIR9duSwwn0&sheet=Calculadoras"
-    )
+    await fetch(localUrl + "Calculadoras")
       .then((response) => response.json())
       .then((resp) => {
         setCalcList(resp.rows);
@@ -56,7 +68,12 @@ function App() {
   function alertInfo() {
     Swal.fire({
       title: "Sobre a utilização",
-      text: "Essa planilha foi criada por Francisco Martins Nunes na Universidade Federal de Minas Gerais. 2021-2023. Material destinado exclusivamente para uso educacional.",
+      html:
+        infoData.disclaimer +
+        `
+        <br><br>
+        <a href="${infoData.pesquisa}" target="_blank">Responder pesquisa</a>
+      `,
     });
   }
 
@@ -64,7 +81,7 @@ function App() {
     const { value: accept } = await Swal.fire({
       title: "Termos de uso",
       input: "checkbox",
-      text: "Essa planilha foi criada por Francisco Martins Nunes na Universidade Federal de Minas Gerais. 2021-2023. Material destinado exclusivamente para uso educacional.",
+      html: infoData.disclaimer,
       inputValue: 0,
       inputPlaceholder: "Concordo em utilizar apenas para fins acadêmicos.",
       confirmButtonText: 'Continuar <i class="fa fa-arrow-right"></i>',
@@ -98,6 +115,14 @@ function App() {
             <i className="fa-solid fa-circle-question"></i>
           </InfoBtn>
         </h1>
+        <QuestionsLink
+          media="hide-mobile"
+          alt="Pesquisa de utilização"
+          href={infoData?.pesquisa}
+          target="_blank"
+        >
+          <i className="fa-solid fa-clipboard-question"></i> Pesquisa
+        </QuestionsLink>
       </HeaderHome>
       <Container className={calcSelected ? "top-menu" : null}>
         <BackHome
@@ -182,6 +207,34 @@ const HeaderHome = styled.header`
   }
 `;
 
+const QuestionsLink = styled.a`
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--blue);
+  color: var(--lighter-grey);
+  border-radius: 0 0 0 0.5rem;
+  text-decoration: none;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  &:hover {
+    color: var(--white);
+    background-color: var(--dark-blue);
+  }
+
+  ${(props) =>
+    props.media &&
+    css`
+      @media (max-width: 768px) {
+        display: none;
+      }
+    `}
+`;
+
 const BackHome = styled.button`
   position: sticky;
   left: 0;
@@ -247,6 +300,10 @@ const InfoBtn = styled.button`
   align-items: center;
   justify-content: center;
   margin-left: 0.5rem;
+
+  &:hover {
+    color: var(--dark-blue);
+  }
 `;
 
 const LoadingArea = styled.div`
