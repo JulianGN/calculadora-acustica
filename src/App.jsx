@@ -22,7 +22,7 @@ function App() {
   const [calcSelected, setCalc] = useState(null);
   const [iFrameLoaded, setStatus] = useState(false);
   const localUrl =
-    "https://api-accalc.glitch.me/api?id=1v51SITbRLPjj7pt0UM0v5v0f0YUPFHQXUIR9duSwwn0&sheet=";
+    "https://accalc-ufmg-api.up.railway.app/api?id=1v51SITbRLPjj7pt0UM0v5v0f0YUPFHQXUIR9duSwwn0&gid=";
 
   useEffect(() => {
     loadInfoData();
@@ -41,7 +41,7 @@ function App() {
   }, [infoData]);
 
   async function loadInfoData() {
-    await fetch(localUrl + "DadosIniciais")
+    await fetch(localUrl + "1154390419")
       .then((response) => response.json())
       .then((resp) => {
         setInfoData(resp.rows[0]);
@@ -49,7 +49,7 @@ function App() {
   }
 
   async function loadList() {
-    await fetch(localUrl + "Calculadoras")
+    await fetch(localUrl + "0")
       .then((response) => response.json())
       .then((resp) => {
         setCalcList(resp.rows);
@@ -119,24 +119,21 @@ function App() {
           media="hide-mobile"
           alt="Pesquisa de utilização"
           href={infoData?.pesquisa}
-          target="_blank"
-        >
+          target="_blank">
           <i className="fa-solid fa-clipboard-question"></i> Pesquisa
         </QuestionsLink>
       </HeaderHome>
       <Container className={calcSelected ? "top-menu" : null}>
         <BackHome
           className={calcSelected == null ? "hide" : null}
-          onClick={() => backHome()}
-        >
+          onClick={() => backHome()}>
           <i className="fa-solid fa-chevron-left"></i>
         </BackHome>
         {calcList.length > 0 ? (
           calcList.map((calculadora, i) => (
             <CalcsOptions
               onClick={() => chooseCalc(calculadora)}
-              key={"calculadora-" + i}
-            >
+              key={"calculadora-" + i}>
               <CalculadoraArticle
                 atributos={calculadora}
                 current={calcSelected}
@@ -185,8 +182,7 @@ function App() {
             height="100%"
             frameBorder="0"
             scrolling="no"
-            src={calcSelected.url}
-          ></iframe>
+            src={calcSelected.url}></iframe>
         )}
       </FrameContainer>
     </div>
